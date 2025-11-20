@@ -1,0 +1,24 @@
+ * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box; /* A common reset for box model */
+    }
+
+.app-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  min-height: 100vh;
+  width: 100%;
+ padding: 20px;   
+}
+
+.main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+   border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 15px;
+   box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}

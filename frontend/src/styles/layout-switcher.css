@@ -1,0 +1,27 @@
+.layout-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.layout-switcher button {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background: #f8f9fa;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.layout-switcher button:hover {
+  background: #e5e7eb;
+}
+
+.layout-switcher .active {
+  background: #405ff2;
+  color: white;
+  border-color: #405ff2;
+}

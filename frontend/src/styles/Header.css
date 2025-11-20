@@ -1,0 +1,156 @@
+.car-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  padding:  20px 5%;
+}
+
+.car-header-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  width: 50%;
+}
+
+.car-logo {
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: #222;
+}
+
+/* Search Box with Icon */
+.car-search-wrapper {
+  position: relative;
+  width: 70%;
+}
+
+.car-search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.car-search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px; /* left padding for icon */
+  border-radius: 9999px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.car-search-input:focus {
+  border-color: #405ff2;
+  box-shadow: 0 0 0 3px rgba(64, 95, 242, 0.15);
+}
+
+/* Right Side Icons */
+.car-header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.car-icon-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  color: #444;
+}
+
+.car-icon-group span {
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.car-icon-group:hover span,
+.car-icon:hover {
+  color: #405ff2;
+}
+
+.car-icon {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.car-icon:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .car-header-left {
+    gap: 12px;
+  }
+
+  .car-search-wrapper {
+    width: 180px;
+  }
+
+  .car-header-right {
+    gap: 12px;
+  }
+}
+
+/* Lower Sticky Header */
+.car-lower-header {
+  position: sticky;
+  top: 0; /* sticks under main header when scrolling */
+  z-index: 100;
+  background-color: #fff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.car-lower-list {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.car-lower-item {
+  font-size: 16px;
+  font-weight: 500;
+  color: #444;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.car-lower-item:hover {
+  color: #405ff2;
+}
+
+.car-lower-item::after {
+  content: '';
+  display: block;
+  width: 0%;
+  height: 2px;
+  background-color: #405ff2;
+  transition: width 0.3s;
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+}
+
+.car-lower-item:hover::after {
+  width: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .car-lower-list {
+    gap: 20px;
+  }
+
+  .car-lower-item {
+    font-size: 14px;
+  }
+}
