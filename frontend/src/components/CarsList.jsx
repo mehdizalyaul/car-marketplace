@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Card from "./Card";
 import LayoutSwitcher from "./switchLayout";
+import SortMenu from "./SortMenu";
 
 export default function CarsList() {
-   const [cols, setCols] = useState(4); // default layout
+   const [cols, setCols] = useState(4); 
+   const [sortBy, setSortBy] = useState("recommended");
   const cars = [
     {
       id: 1,
@@ -84,15 +86,18 @@ export default function CarsList() {
 };
 
   return (
-     <div>
-      <LayoutSwitcher current={cols} onChange={setCols} />
+    <div>
+      <div className="cars-toolbar">
+        <SortMenu value={sortBy} onChange={setSortBy} />
+        <LayoutSwitcher current={cols} onChange={setCols} />
+      </div>
 
       <div
         className="cars-container"
-    style={{
-    "--cols": cols,
-    "--scale": sizeMap[cols],
-  }}
+        style={{
+          "--cols": cols,
+          "--scale": sizeMap[cols]
+        }}
       >
         {cars.map(car => (
           <Card key={car.id} car={car} />

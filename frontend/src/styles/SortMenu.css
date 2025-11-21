@@ -1,0 +1,71 @@
+.sort-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.sort-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  transition: 0.2s ease;
+}
+
+.sort-btn:hover {
+  background: #e5e7eb;
+}
+
+.sort-label {
+  font-weight: 600;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  transition: 0.2s ease;
+}
+
+/* Dropdown */
+.sort-menu {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 220px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.08),
+    0 20px 40px rgba(0,0,0,0.05);
+  padding: 8px 0;
+  z-index: 20;
+  animation: fadeSort 0.15s ease-out;
+}
+
+@keyframes fadeSort {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.sort-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+.sort-item:hover {
+  background: #f3f4f6;
+}
+
+.checked {
+  color: #405ff2;
+}
