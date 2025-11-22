@@ -19,7 +19,7 @@
   align-items: flex-start;
 }
 
-.description {
+.car-card-content {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 15px;
@@ -164,4 +164,11 @@
 .heart:hover {
   color: #bb2d2d;
   cursor: pointer;
+}
+
+.cars-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
 }

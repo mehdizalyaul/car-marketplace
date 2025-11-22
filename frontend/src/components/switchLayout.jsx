@@ -1,5 +1,5 @@
-import { Grid2x2, Grid3x2, Grid3x3, Rows3 } from "lucide-react";
-import "../styles/layout-switcher.css";
+import { Grid2x2, Grid3x2, Grid3x3 } from "lucide-react";
+import "../styles/LayoutSwitcher.css";
 
 export default function LayoutSwitcher({ current, onChange }) {
   return (

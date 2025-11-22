@@ -11,7 +11,7 @@ import "../styles/Card.css";
 export default function Card({ car }) {
   return (
     <div className="car-card">
-      <div className="description">
+      <div className="car-card-content">
 
         {/* TITLE + HEART */}
         <div className="desc-header">

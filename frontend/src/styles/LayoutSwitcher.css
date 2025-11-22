@@ -1,12 +1,15 @@
 .layout-switcher {
   display: flex;
   justify-content: center;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
 }
 
 .layout-switcher button {
-  padding: 6px 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 8px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
   background: #f8f9fa;
