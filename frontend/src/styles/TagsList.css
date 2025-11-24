@@ -1,0 +1,57 @@
+/* Container for all active filter tags */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+/* Tag pill */
+.filter-tag {
+  display: flex;
+  align-items: center;
+  background-color: #405ff2;
+  color: #333;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  cursor: default;
+  transition: background-color 0.2s;
+  color: #e5e7eb;
+}
+
+/* Hover effect */
+.filter-tag:hover {
+  background-color: #e6e6e6;
+}
+
+/* Key title (Brand:, Fuel:, etc.) in bold */
+.filter-tag .tag-key {
+  font-weight: 600;
+  margin-right: 4px;
+}
+
+/* Value styling */
+.filter-tag .tag-value {
+  opacity: 0.9;
+}
+
+/* Close icon */
+.filter-tag svg {
+  margin-left: 6px;
+  cursor: pointer;
+  color: #e5e7eb
+  transition: color 0.2s;
+}
+
+.filter-tag svg:hover {
+  color: #ff4d4f;
+}
+
+/* Ellipsis for long values */
+.filter-tag[title] {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
