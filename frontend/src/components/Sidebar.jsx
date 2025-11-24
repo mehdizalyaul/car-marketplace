@@ -1,52 +1,84 @@
 import { useState } from "react";
-import { ChartNoAxesGantt, ChevronDown, ChevronRight, Fuel, Gem, MapPin, Ruler, Tag } from "lucide-react";
+import {
+  ChartNoAxesGantt,
+  ChevronDown,
+  ChevronRight,
+  Fuel,
+  Gem,
+  MapPin,
+  Ruler,
+  Tag,
+} from "lucide-react";
+import useCars from "../hooks/useCars";
 import "../styles/Sidebar.css";
 
 export default function Sidebar() {
-  const [openBuyOnline, setOpenBuyOnline] = useState(true);
-  const [openPopularFilters, setOpenPopularFilters] = useState(true);
+  const { filters, filterOptions, setFilters } = useCars();
+
+  // --- Open/Collapse States ---
   const [openBrand, setOpenBrand] = useState(true);
   const [openFuel, setOpenFuel] = useState(true);
   const [openTransmission, setOpenTransmission] = useState(true);
   const [openMiles, setOpenMiles] = useState(true);
   const [openPrice, setOpenPrice] = useState(true);
   const [openLocation, setOpenLocation] = useState(true);
+
   const [brandTab, setBrandTab] = useState("popular");
 
-  const brandList = [
-    { name: "Chevrolet", count: "73,049" },
-    { name: "Dodge", count: "15,066" },
-    { name: "Ford", count: "78,737" },
-    { name: "Honda", count: "50,158" },
-    { name: "Hyundai", count: "35,781" },
-  ];
+  // --- Filter States (strings only, never objects) ---
+  const [brands, setBrandFilter] = useState(filters?.brand || []);
+  const [fuels, setFuelFilter] = useState(filters?.fuel || []);
+  const [transmissions, setTransmissionFilter] = useState(
+    filters?.transmission || []
+  );
+  const [miles, setMilesFilter] = useState(filters?.mileage || []);
+  const [prices, setPriceFilter] = useState(filters?.price || []);
+  const [locations, setLocationFilter] = useState(filters?.location || []);
+
+  // --- APPLY FILTERS ---
+  function applyFilters() {
+    const newFilters = {};
+
+    if (brands.length) newFilters.brand = brands;
+    if (fuels.length) newFilters.fuel = fuels;
+    if (transmissions.length) newFilters.transmission = transmissions;
+    if (miles.length) newFilters.mileage = miles;
+    if (prices.length) newFilters.price = prices;
+    if (locations.length) newFilters.location = locations;
+
+    setFilters(newFilters);
+  }
+
+  // --- CLEAR FILTERS ---
+  function clearFilters() {
+    setBrandFilter([]);
+    setFuelFilter([]);
+    setTransmissionFilter([]);
+    setMilesFilter([]);
+    setPriceFilter([]);
+    setLocationFilter([]);
+    setFilters({});
+  }
+
+  // Get brands based on tab (you'll need to define popular brands)
+  const popularBrands = ["Chevrolet", "Dodge", "Ford", "Honda", "Hyundai"];
+  const displayedBrands =
+    brandTab === "popular"
+      ? filterOptions?.brand?.filter((b) => popularBrands.includes(b))
+      : filterOptions?.brand;
 
   return (
     <aside className="filter-sidebar">
+      <div className="filter-actions">
+        <button className="apply" onClick={applyFilters}>
+          Apply Filter
+        </button>
+        <button className="clear" onClick={clearFilters}>
+          Clear All
+        </button>
+      </div>
 
-      {/* Buy Online */}
-      <FilterSection
-        title="Buy 100% online"
-        open={openBuyOnline}
-        setOpen={setOpenBuyOnline}
-      />
-
-      {/* Popular Filters */}
-      <FilterSection
-        title="Popular filters"
-        open={openPopularFilters}
-        setOpen={setOpenPopularFilters}
-      >
-        <FilterOption label="Under $25,000" />
-        <FilterOption label="Under 30,000 miles" />
-        <FilterOption label="One owner & accident-free" />
-        <FilterOption label="Tech-savvy" />
-        <FilterOption label="Smart & safe" />
-        <FilterOption label="Eco-friendly & efficient" />
-        <FilterOption label="All-terrain ready" />
-      </FilterSection>
-
-      {/* Brand */}
+      {/* BRAND */}
       <FilterSection
         title="Brand"
         open={openBrand}
@@ -67,103 +99,160 @@ export default function Sidebar() {
             All
           </button>
         </div>
+
         <div className="brand-list">
-          {brandList.map(b => (
-            <label className="brand-item" key={b.name}>
-              <input type="checkbox" />
-              <span>{b.name} ({b.count})</span>
-            </label>
-          ))}
+          {displayedBrands &&
+            displayedBrands.map((b) => (
+              <label className="brand-item" key={b}>
+                <input
+                  type="checkbox"
+                  value={b}
+                  checked={brands.includes(b)}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setBrandFilter((prev) =>
+                      prev.includes(value)
+                        ? prev.filter((item) => item !== value)
+                        : [...prev, value]
+                    );
+                  }}
+                />
+                <span>{b}</span>
+              </label>
+            ))}
         </div>
       </FilterSection>
 
-      {/* Fuel */}
+      {/* FUEL */}
       <FilterSection
         title="Fuel"
         open={openFuel}
         setOpen={setOpenFuel}
         icon={<Fuel size={17} />}
       >
-        <FilterOption label="Petrol" />
-        <FilterOption label="Diesel" />
-        <FilterOption label="Electric" />
-        <FilterOption label="Hybrid" />
+        {filterOptions?.fuel &&
+          filterOptions.fuel.map((f) => (
+            <FilterOption
+              key={f}
+              label={f}
+              selected={fuels}
+              setSelected={setFuelFilter}
+            />
+          ))}
       </FilterSection>
 
-      {/* Transmission */}
+      {/* TRANSMISSION */}
       <FilterSection
         title="Transmission"
         open={openTransmission}
         setOpen={setOpenTransmission}
-        icon={<ChartNoAxesGantt size={17}/>}
+        icon={<ChartNoAxesGantt size={17} />}
       >
-        <FilterOption label="Automatic" />
-        <FilterOption label="Manual" />
-        <FilterOption label="CVT" />
+        {filterOptions?.transmission &&
+          filterOptions.transmission.map((t) => (
+            <FilterOption
+              key={t}
+              label={t}
+              selected={transmissions}
+              setSelected={setTransmissionFilter}
+            />
+          ))}
       </FilterSection>
 
-      {/* Miles */}
+      {/* MILEAGE */}
       <FilterSection
         title="Mileage"
         open={openMiles}
         setOpen={setOpenMiles}
-        icon={<Ruler size={17}/>}
+        icon={<Ruler size={17} />}
       >
-        <FilterOption label="Under 15,000 miles" />
-        <FilterOption label="Under 30,000 miles" />
-        <FilterOption label="Under 50,000 miles" />
+        {filterOptions?.mileage &&
+          filterOptions.mileage.map((m) => (
+            <FilterOption
+              key={m}
+              label={m}
+              selected={miles}
+              setSelected={setMilesFilter}
+            />
+          ))}
       </FilterSection>
 
-      {/* Price */}
+      {/* PRICE */}
       <FilterSection
         title="Price"
         open={openPrice}
         setOpen={setOpenPrice}
         icon={<Tag size={17} />}
       >
-        <FilterOption label="Under $20,000" />
-        <FilterOption label="Under $25,000" />
-        <FilterOption label="Under $30,000" />
+        {filterOptions?.price &&
+          filterOptions.price.map((p) => (
+            <FilterOption
+              key={p}
+              label={p}
+              selected={prices}
+              setSelected={setPriceFilter}
+            />
+          ))}
       </FilterSection>
 
-      {/* Location */}
+      {/* LOCATION */}
       <FilterSection
         title="Location"
         open={openLocation}
         setOpen={setOpenLocation}
         icon={<MapPin size={17} />}
       >
-        <FilterOption label="Tampa, FL" />
-        <FilterOption label="Orlando, FL" />
-        <FilterOption label="Miami, FL" />
+        {filterOptions?.location &&
+          filterOptions.location.map((l) => (
+            <FilterOption
+              key={l}
+              label={l}
+              selected={locations}
+              setSelected={setLocationFilter}
+            />
+          ))}
       </FilterSection>
-
     </aside>
   );
 }
 
-/* Helper Components */
-function FilterSection({ title, open, setOpen,icon, children }) {
+/* ------------------- HELPER COMPONENTS ------------------- */
+
+function FilterSection({ title, open, setOpen, icon, children }) {
   return (
     <div className="filter-section">
       <div className="filter-header" onClick={() => setOpen(!open)}>
         <div className="filter-header_title">
-         {icon && icon}
-        <span>{title}</span>
+          {icon}
+          <span>{title}</span>
         </div>
-        
-        <span className="arrow">{open ? <ChevronDown /> : <ChevronRight />}</span>
+        <span className="arrow">
+          {open ? <ChevronDown /> : <ChevronRight />}
+        </span>
       </div>
       {open && <div className="filter-content">{children}</div>}
     </div>
   );
 }
 
-function FilterOption({ label }) {
+function FilterOption({ label, selected = [], setSelected }) {
+  const isChecked = selected.includes(label);
   return (
     <label className="filter-option">
-      <input type="checkbox" />
-      {label}
+      <input
+        type="checkbox"
+        value={label}
+        checked={isChecked}
+        onChange={(e) => {
+          const value = e.target.value;
+          setSelected((prev) =>
+            prev.includes(value)
+              ? prev.filter((item) => item !== value)
+              : [...prev, value]
+          );
+        }}
+      />
+      <span>{label}</span>
     </label>
   );
 }

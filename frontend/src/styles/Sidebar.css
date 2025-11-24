@@ -6,11 +6,9 @@
   border-radius: 16px;
   border: 1px solid #e5e7eb;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
   height: auto;
 }
-
-
 
 /* Each filter section */
 .filter-section {
@@ -26,7 +24,6 @@
   display: flex;
   justify-content: space-between;
   color: #222;
-  
 }
 
 .filter-header .filter-header_title {
@@ -36,7 +33,6 @@
   gap: 10px;
 }
 
-
 /* Arrow icon */
 .arrow {
   font-size: 14px;
@@ -45,11 +41,11 @@
 
 /* Filter content container */
 .filter-content {
-  margin-top: 12px;
+  margin: 12px 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 250px; 
+  max-height: 250px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -60,7 +56,7 @@
 }
 
 .filter-content::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
 
@@ -159,4 +155,50 @@
   .tabs {
     gap: 6px;
   }
+}
+
+.filter-actions {
+  display: flex;
+  gap: 5px;
+}
+.apply {
+  padding: 12px 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #405ff2;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-bottom: 10px;
+  color: #e5e7eb;
+}
+
+.clear {
+  padding: 12px 0;
+  border: 1px solid #405ff2;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-bottom: 10px;
+  color: #405ff2;
+}
+
+.clear:hover {
+  background: #405ff2;
+  border-color: #e5e7eb;
+  color: #e5e7eb;
+}
+
+.apply:hover {
+  background: #e5e7eb;
+  border-color: #405ff2;
+  color: #405ff2;
 }
