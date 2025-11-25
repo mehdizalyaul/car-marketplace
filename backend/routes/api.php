@@ -1,0 +1,61 @@
+<?php
+
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ProductController;
+use Illuminate\Support\Facades\Route;
+
+
+Route::get('/ping', function () {
+    return response()->json(['message' => 'API is working!']);
+});
+
+Route::prefix('auth')->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('logout', [AuthController::class, 'logout']);
+        Route::get('user', [AuthController::class, 'user']);
+    });
+});
+
+Route::prefix('products')->group(function () {
+    Route::get('/', [ProductController::class, 'index']);
+    Route::get('/{product}', [ProductController::class, 'show']);
+
+    Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::post('/', [ProductController::class, 'store']);
+        Route::put('/{product}', [ProductController::class, 'update']);
+        Route::delete('/{product}', [ProductController::class, 'destroy']);
+    });
+});
+
+Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
+    Route::get('/', [CartController::class, 'index']);
+    Route::post('/add', [CartController::class, 'add']);
+    Route::put('/update/{item}', [CartController::class, 'update']);
+    Route::delete('/remove/{item}', [CartController::class, 'remove']);
+    Route::delete('/clear', [CartController::class, 'clear']);
+});
+
+Route::middleware('auth:sanctum')->prefix('orders')->group(function () {
+    Route::post('/', [OrderController::class, 'store']);
+    Route::get('/', [OrderController::class, 'index']);
+    Route::get('/{order}', [OrderController::class, 'show']);
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin/all', [OrderController::class, 'adminIndex']);
+        Route::patch('/admin/{order}/status', [OrderController::class, 'updateStatus']);
+    });
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/upload', [UploadController::class, 'upload'])->middleware('admin');
+
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'show']);
+        Route::put('/', [ProfileController::class, 'update']);
+    });
+});
+
+Route::get('/search', [SearchController::class, 'search']);
