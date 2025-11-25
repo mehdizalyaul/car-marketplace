@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { CarApi } from "../services";
+import { CarsApi } from "../services";
 import { CarsContext } from "./myContexts";
 
 const initialState = {
@@ -15,51 +15,38 @@ const initialState = {
   },
   loading: false,
   error: null,
+  page: 1,
+  pageSize: 20,
+  total: 0,
+  hasMore: true,
 };
 
 function carsReducer(state, action) {
   switch (action.type) {
     case "SET_LOADING":
       return { ...state, loading: true };
-
     case "SET_DATA":
-      return { ...state, cars: action.payload, loading: false };
-
+      return {
+        ...state,
+        cars: action.payload.cars,
+        total: action.payload.total || 0,
+        loading: false,
+        hasMore: action.payload.hasMore,
+      };
     case "SET_ERROR":
       return { ...state, error: action.payload, loading: false };
-
-    case "SET_FILTER_OPTIONS":
-      return {
-        ...state,
-        filterOptions: {
-          ...state.filterOptions,
-          ...action.payload,
-        },
-      };
-
     case "SET_FILTERS":
-      return { ...state, filters: action.payload };
-
-    case "CLEAR_A_FILTER":
+      return { ...state, filters: action.payload, page: 1, cars: [] };
+    case "SET_PAGE":
+      return { ...state, page: action.payload };
+    case "APPEND_CARS":
       return {
         ...state,
-        filters: {
-          ...state.filters,
-          [action.payload.type]: state.filters[action.payload.type].filter(
-            (v) => v !== action.payload.value
-          ),
-        },
+        cars: [...state.cars, ...action.payload.cars],
+        hasMore:
+          state.cars.length + action.payload.cars.length <
+          (action.payload.total || 0),
       };
-
-    case "CLEAR_A_FILTER_GROUP":
-      return {
-        ...state,
-        filters: {
-          ...state.filters,
-          [action.payload.type]: [],
-        },
-      };
-
     default:
       return state;
   }
@@ -68,34 +55,30 @@ function carsReducer(state, action) {
 export function CarsProvider({ children }) {
   const [state, dispatch] = useReducer(carsReducer, initialState);
 
-  // Load all cars + filter options
-  const getAllCars = async () => {
+  // Load first page or reload after filters
+  const loadCars = async (filters = state.filters, page = 1) => {
     dispatch({ type: "SET_LOADING" });
     try {
-      const res = await CarApi.getAll();
-
-      dispatch({ type: "SET_DATA", payload: res.cars });
-      dispatch({ type: "SET_FILTER_OPTIONS", payload: res.filterOptions });
+      const res = await CarsApi.getFiltered(filters, page, state.pageSize);
+      if (page === 1) dispatch({ type: "SET_DATA", payload: res });
+      else dispatch({ type: "APPEND_CARS", payload: res });
     } catch (err) {
       dispatch({ type: "SET_ERROR", payload: err.message });
     }
   };
 
-  // Load cars after filtering
-  const loadCars = async (filters) => {
-    dispatch({ type: "SET_LOADING" });
-    try {
-      const res = await CarApi.getFiltered(filters);
-      dispatch({ type: "SET_DATA", payload: res.cars });
-    } catch (err) {
-      dispatch({ type: "SET_ERROR", payload: err.message });
-    }
-  };
-
-  // When user clicks on a filter option
+  // Set filters and reload
   const setFilters = (newFilters) => {
     dispatch({ type: "SET_FILTERS", payload: newFilters });
-    loadCars(newFilters);
+    loadCars(newFilters, 1);
+  };
+
+  // Load next page for infinite scroll / "Load More"
+  const loadNextPage = () => {
+    if (!state.hasMore || state.loading) return;
+    const nextPage = state.page + 1;
+    dispatch({ type: "SET_PAGE", payload: nextPage });
+    loadCars(state.filters, nextPage);
   };
 
   return (
@@ -103,9 +86,9 @@ export function CarsProvider({ children }) {
       value={{
         ...state,
         dispatch,
-        getAllCars,
-        loadCars,
         setFilters,
+        loadCars,
+        loadNextPage,
       }}
     >
       {children}
