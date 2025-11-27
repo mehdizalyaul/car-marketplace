@@ -9,32 +9,38 @@ import { fallbackCars } from "../db";
 export default function CarsList() {
   const [cols, setCols] = useState(4);
   const [sortBy, setSortBy] = useState("recommended");
-  const { cars, loading, error, hasMore, filters, loadCars, loadNextPage } =
-    useCars();
+
+  const { cars, loading, error, filters, loadCars, loadNextPage } = useCars();
 
   // Reload cars when filters change
   useEffect(() => {
-    loadCars();
+    loadCars(filters, 1);
   }, [filters]);
 
   // Infinite scroll
   useEffect(() => {
     function handleScroll() {
       const bottom =
-        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
-      if (bottom && !loading && hasMore) {
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 700;
+
+      if (bottom && !loading) {
+        console.log("Loading next page...");
         loadNextPage();
       }
     }
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore]);
+  }, [loading]);
 
   // Fallback if no cars
   const carsList = cars?.length > 0 ? cars : fallbackCars;
 
-  const sizeMap = { 2: 1, 4: 1, 5: 1 };
+  const sizeMap = {
+    2: 1,
+    4: 1,
+    5: 1,
+  };
 
   return (
     <div>
@@ -52,9 +58,7 @@ export default function CarsList() {
         className="cars-container"
         style={{ "--cols": cols, "--scale": sizeMap[cols] }}
       >
-        {carsList.map((car) => (
-          <Card key={car.id} car={car} />
-        ))}
+        {carsList && carsList.map((car) => <Card key={car.id} car={car} />)}
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CarController;
 
 
 Route::get('/ping', function () {
@@ -19,15 +19,17 @@ Route::prefix('auth')->group(function () {
     });
 });
 
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index']);
-    Route::get('/{product}', [ProductController::class, 'show']);
+Route::prefix('cars')->group(function () {
+    // Public routes
+    Route::get('/', [CarController::class, 'index']);
+    Route::get('/{car}', [CarController::class, 'show']);
 
-    Route::middleware(['auth:sanctum', 'admin'])->group(function () {
-        Route::post('/', [ProductController::class, 'store']);
-        Route::put('/{product}', [ProductController::class, 'update']);
-        Route::delete('/{product}', [ProductController::class, 'destroy']);
-    });
+    // Protected routes (requires auth + admin)
+  //  Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+        Route::post('/', [CarController::class, 'store']);
+        Route::put('/{car}', [CarController::class, 'update']);
+        Route::delete('/{car}', [CarController::class, 'destroy']);
+  //  });
 });
 
 Route::middleware('auth:sanctum')->prefix('cart')->group(function () {

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use App\Http\Resources\CarDetailsResource;
 use App\Http\Resources\CarResource;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
@@ -23,7 +23,10 @@ class CarController extends Controller
   // Get all cars with relationships
  
 public function index(Request $request)
+
 {
+  
+
     $query = Car::with([
         'brand',
         'fuelType',
@@ -126,7 +129,7 @@ return response()->json([
  public function show($id)
     {
           $car = Car::with(['brand', 'fuelType', 'transmission', 'location', 'images'])->findOrFail($id);
-    return new CarResource($car);
+    return new CarDetailsResource($car);
     }
 
 

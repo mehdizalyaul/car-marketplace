@@ -14,7 +14,6 @@ import "../styles/Sidebar.css";
 
 export default function Sidebar() {
   const { filters, filterOptions, setFilters } = useCars();
-
   // --- Open/Collapse States ---
   const [openBrand, setOpenBrand] = useState(true);
   const [openFuel, setOpenFuel] = useState(true);
@@ -64,8 +63,8 @@ export default function Sidebar() {
   const popularBrands = ["Chevrolet", "Dodge", "Ford", "Honda", "Hyundai"];
   const displayedBrands =
     brandTab === "popular"
-      ? filterOptions?.brand?.filter((b) => popularBrands.includes(b))
-      : filterOptions?.brand;
+      ? filterOptions?.brands?.filter((b) => popularBrands.includes(b))
+      : filterOptions?.brands;
 
   return (
     <aside className="filter-sidebar">
@@ -130,8 +129,8 @@ export default function Sidebar() {
         setOpen={setOpenFuel}
         icon={<Fuel size={17} />}
       >
-        {filterOptions?.fuel &&
-          filterOptions.fuel.map((f) => (
+        {filterOptions?.fuels &&
+          filterOptions.fuels.map((f) => (
             <FilterOption
               key={f}
               label={f}
@@ -148,8 +147,8 @@ export default function Sidebar() {
         setOpen={setOpenTransmission}
         icon={<ChartNoAxesGantt size={17} />}
       >
-        {filterOptions?.transmission &&
-          filterOptions.transmission.map((t) => (
+        {filterOptions?.transmissions &&
+          filterOptions.transmissions.map((t) => (
             <FilterOption
               key={t}
               label={t}
@@ -166,8 +165,8 @@ export default function Sidebar() {
         setOpen={setOpenMiles}
         icon={<Ruler size={17} />}
       >
-        {filterOptions?.mileage &&
-          filterOptions.mileage.map((m) => (
+        {filterOptions?.mileages &&
+          filterOptions.mileages.map((m) => (
             <FilterOption
               key={m}
               label={m}
@@ -184,8 +183,8 @@ export default function Sidebar() {
         setOpen={setOpenPrice}
         icon={<Tag size={17} />}
       >
-        {filterOptions?.price &&
-          filterOptions.price.map((p) => (
+        {filterOptions?.prices &&
+          filterOptions.prices.map((p) => (
             <FilterOption
               key={p}
               label={p}
@@ -202,8 +201,8 @@ export default function Sidebar() {
         setOpen={setOpenLocation}
         icon={<MapPin size={17} />}
       >
-        {filterOptions?.location &&
-          filterOptions.location.map((l) => (
+        {filterOptions?.locations &&
+          filterOptions.locations.map((l) => (
             <FilterOption
               key={l}
               label={l}

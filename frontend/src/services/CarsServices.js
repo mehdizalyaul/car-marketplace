@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api/cars";
+import { BASE_URL } from "../db";
 
 // FILTER CARS
 export async function getFiltered(filters = {}, page, pageSize) {
@@ -21,7 +21,6 @@ export async function getFiltered(filters = {}, page, pageSize) {
     });
 
     const url = `${BASE_URL}?${params.toString()}`;
-
     const res = await fetch(url);
 
     if (!res.ok) {
