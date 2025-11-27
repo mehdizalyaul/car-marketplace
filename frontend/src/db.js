@@ -124,3 +124,51 @@ export const fallbackCars = [
 ];
 
 export const BASE_URL = "http://localhost:8000/api/cars";
+
+export const highlights = [
+  "Lane Keeping Assist",
+  "Forward Collision Warning",
+  "Blind Spot Detection",
+  "Rear Cross-Traffic Alert",
+  "Driver Attention Warning",
+  "Apple CarPlay & Android Auto",
+  "Rear Parking Sensors",
+  "Heated Front Seats",
+  "Dual-Zone Climate Control",
+  "LED Daytime Running Lights",
+  "Roof Rails",
+  "8-inch Touchscreen Display",
+];
+
+export const features = {
+  Safety: [
+    "Anti-Lock Brakes (ABS)",
+    "Electronic Stability Control",
+    "Traction Control System",
+    "Airbags (Front, Side, Curtain)",
+    "Tire Pressure Monitoring",
+    "Child Safety Door Locks",
+    "Rearview Camera",
+    "Hill Start Assist",
+  ],
+  Technology: [
+    "Bluetooth Connectivity",
+    "USB Ports (Multiple)",
+    "Auxiliary Audio Input",
+    "Steering Wheel Audio Controls",
+    "Voice Recognition",
+    "Hands-Free Phone",
+    "Smart Device Integration",
+    "6-Speaker Sound System",
+  ],
+  Comfort: [
+    "Power Windows & Locks",
+    "Cruise Control",
+    "Tilt & Telescoping Steering Wheel",
+    "60/40 Split-Folding Rear Seat",
+    "Adjustable Headrests",
+    "Cargo Area Cover",
+    "Remote Keyless Entry",
+    "12V Power Outlets",
+  ],
+};
