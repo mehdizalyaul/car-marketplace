@@ -3,7 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CarController;
-
+use App\Http\Controllers\Api\WishlistController;
 
 Route::get('/ping', function () {
     return response()->json(['message' => 'API is working!']);
@@ -31,6 +31,13 @@ Route::prefix('cars')->group(function () {
         Route::delete('/{car}', [CarController::class, 'destroy']);
   //  });
 });
+
+//Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/wishlist', [WishlistController::class, 'index']);
+    Route::post('/wishlist/{carId}', [WishlistController::class, 'store']);
+    Route::delete('/wishlist/{carId}', [WishlistController::class, 'destroy']);
+    Route::get('/wishlist/check/{carId}', [WishlistController::class, 'check']);
+//});
 
 Route::middleware('auth:sanctum')->prefix('cart')->group(function () {
     Route::get('/', [CartController::class, 'index']);
