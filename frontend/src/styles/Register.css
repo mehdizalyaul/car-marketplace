@@ -1,0 +1,467 @@
+/* ===================== CONTAINER ===================== */
+.register-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter",
+    sans-serif;
+}
+
+.register-wrapper {
+  display: flex;
+  max-width: 1100px;
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===================== FORM SECTION ===================== */
+.register-form-section {
+  flex: 1;
+  padding: 48px;
+  overflow-y: auto;
+  max-height: 90vh;
+}
+
+.register-form-section::-webkit-scrollbar {
+  width: 6px;
+}
+
+.register-form-section::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+/* ===================== HEADER ===================== */
+.register-header {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.register-logo {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.register-logo svg {
+  color: #fff;
+}
+
+.register-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #111;
+  margin: 0 0 8px 0;
+}
+
+.register-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin: 0;
+}
+
+/* ===================== FORM ===================== */
+.register-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ===================== INPUT WRAPPER ===================== */
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #405ff2;
+  pointer-events: none;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px 14px 12px 44px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #222;
+  background: #fff;
+  transition: all 0.2s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #405ff2;
+  box-shadow: 0 0 0 3px rgba(64, 95, 242, 0.1);
+}
+
+.form-input.error {
+  border-color: #e53e3e;
+}
+
+.form-input.error:focus {
+  box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.1);
+}
+
+.form-input::placeholder {
+  color: #999;
+}
+
+/* ===================== PASSWORD TOGGLE ===================== */
+.password-toggle {
+  position: absolute;
+  right: 14px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.password-toggle:hover {
+  color: #405ff2;
+}
+
+/* ===================== ERROR MESSAGE ===================== */
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #e53e3e;
+  margin-top: -4px;
+}
+
+.error-message svg {
+  flex-shrink: 0;
+}
+
+/* ===================== CHECKBOX ===================== */
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox-input {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #405ff2;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.checkbox-text {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.5;
+}
+
+.checkbox-text .link {
+  color: #405ff2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.checkbox-text .link:hover {
+  text-decoration: underline;
+}
+
+/* ===================== SUBMIT ERROR ===================== */
+.submit-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: #fee;
+  border: 1px solid #e53e3e;
+  border-radius: 8px;
+  color: #e53e3e;
+  font-size: 14px;
+  margin-top: -8px;
+}
+
+.submit-error svg {
+  flex-shrink: 0;
+}
+
+/* ===================== SUBMIT BUTTON ===================== */
+.submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  background: #405ff2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: #3451d9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(64, 95, 242, 0.3);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ===================== LOADING SPINNER ===================== */
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===================== FORM FOOTER ===================== */
+.form-footer {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-top: 8px;
+}
+
+.form-footer .link {
+  color: #405ff2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.form-footer .link:hover {
+  text-decoration: underline;
+}
+
+/* ===================== BENEFITS SECTION ===================== */
+.register-benefits-section {
+  flex: 0 0 420px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 48px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+}
+
+.benefits-content {
+  width: 100%;
+}
+
+.benefits-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.benefits-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0 0 40px 0;
+}
+
+/* ===================== BENEFITS LIST ===================== */
+.benefits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.benefit-item {
+  display: flex;
+  gap: 16px;
+  animation: fadeInLeft 0.6s ease-out;
+}
+
+.benefit-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.benefit-item:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.benefit-item:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.benefit-item:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.benefit-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.benefit-text h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 6px 0;
+}
+
+.benefit-text p {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 968px) {
+  .register-benefits-section {
+    display: none;
+  }
+
+  .register-wrapper {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 20px;
+  }
+
+  .register-form-section {
+    padding: 32px 24px;
+  }
+
+  .register-title {
+    font-size: 26px;
+  }
+
+  .register-logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .register-logo svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .register-container {
+    padding: 10px;
+  }
+
+  .register-form-section {
+    padding: 24px 20px;
+    max-height: 100vh;
+  }
+
+  .register-header {
+    margin-bottom: 28px;
+  }
+
+  .register-title {
+    font-size: 24px;
+  }
+
+  .register-subtitle {
+    font-size: 14px;
+  }
+
+  .register-logo {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 16px;
+  }
+
+  .form-input {
+    padding: 11px 14px 11px 40px;
+    font-size: 13px;
+  }
+
+  .input-icon {
+    left: 12px;
+    width: 16px;
+    height: 16px;
+  }
+
+  .submit-btn {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .form-label {
+    font-size: 13px;
+  }
+
+  .checkbox-text {
+    font-size: 13px;
+  }
+}
