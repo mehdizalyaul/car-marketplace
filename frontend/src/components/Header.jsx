@@ -1,17 +1,22 @@
-import {  Heart, ShoppingCart, User, Search, Car, Medal } from "lucide-react";
-import '../styles/Header.css';
-import {  useState } from "react";
+import { Heart, ShoppingCart, User, Search, Car, Medal } from "lucide-react";
+import "../styles/Header.css";
+import { useState } from "react";
+import { NavLink } from "react-router-dom";
+import AccountMenu from "./accountMenu";
 
 export default function Header() {
-  const [element,setElement]=useState("new");
-
-
+  const [element, setElement] = useState("new");
+  const [menuVisible, setMenuVisible] = useState(false);
   return (
     <>
       {/* Main Header */}
       <header className="car-header">
         <div className="car-header-left">
-          <h1 className="car-logo"><Car size={40} /></h1>
+          <h1 className="car-logo">
+            <NavLink to="/cars">
+              <Car size={40} />
+            </NavLink>
+          </h1>
           <div className="car-search-wrapper">
             <Search size={16} className="car-search-icon" />
             <input
@@ -23,73 +28,98 @@ export default function Header() {
         </div>
 
         <div className="car-header-right">
-          
           <div className="car-icon-group">
             <Heart size={20} className="car-icon" />
-            <span>Favorites</span>
+
+            <NavLink to="/cars/wishlist">
+              <span>Favorites</span>
+            </NavLink>
           </div>
           <div className="car-icon-group">
             <ShoppingCart size={20} className="car-icon" />
             <span>Cart</span>
           </div>
-          <div className="car-icon-group">
+          <div
+            className="car-icon-group"
+            onClick={() => setMenuVisible(!menuVisible)}
+          >
             <User size={20} className="car-icon" />
             <span>Account</span>
           </div>
         </div>
       </header>
+      {menuVisible && <AccountMenu />}
 
-{/* Lower Sticky Header */}
-<nav className="car-lower-header">
-  <ul className="car-lower-list">
-    {["new", "used", "electrical", "other"].map((item) => (
-      <li
-        key={item}
-        className="car-lower-item"
-        onMouseEnter={(e) => {
-          const rect = e.target.getBoundingClientRect();
+      {/* Lower Sticky Header */}
+      <nav className="car-lower-header">
+        <ul className="car-lower-list">
+          {["new", "used", "electrical", "other"].map((item) => (
+            <li
+              key={item}
+              className="car-lower-item"
+              onMouseEnter={(e) => {
+                const rect = e.target.getBoundingClientRect();
 
-          const list = document.querySelector(".car-lower-list");
-          list.style.setProperty("--underline-x", e.target.offsetLeft + "px");
-          list.style.setProperty("--underline-width", rect.width + "px");
+                const list = document.querySelector(".car-lower-list");
+                list.style.setProperty(
+                  "--underline-x",
+                  e.target.offsetLeft + "px"
+                );
+                list.style.setProperty("--underline-width", rect.width + "px");
 
-          setElement(item);
-        }}
-      >
-        {item.charAt(0).toUpperCase() + item.slice(1)}
-      </li>
-    ))}
-  </ul>
+                setElement(item);
+              }}
+            >
+              {item.charAt(0).toUpperCase() + item.slice(1)}
+            </li>
+          ))}
+        </ul>
 
-  {element && (
-    <div className="vercel-menu" onMouseLeave={() =>{
-      setElement("")
-    } }>
-      <div className="vercel-menu-section">
-        <h4>{element.toUpperCase()}</h4>
-        <p>Explore top vehicles in the {element} category.</p>
-      </div>
+        {element && (
+          <div
+            className="vercel-menu"
+            onMouseLeave={() => {
+              setElement("");
+            }}
+          >
+            <div className="vercel-menu-section">
+              <h4>{element.toUpperCase()}</h4>
+              <p>Explore top vehicles in the {element} category.</p>
+            </div>
 
-      <div className="vercel-menu-grid">
-        {[
-          { title: "Best Offers", desc: `This is the offers for ${element}` },
-          { title: "Top Rated", desc: `This is the top rated ${element} cars` },
-          { title: "New Arrivals", desc: `This is the new arrivals ${element} cars` },
-          { title: "Trending Models", desc: `This is the trending ${element} cars` },
-        ].map((item, i) => (
-          <div key={i} className="vercel-menu-item">
-            <div className="menu-item-icon"><Medal /></div>
-            <div className="menu-item-description">
-              <p className="menu-title">{item.title}</p>
-              <span>{item.desc}</span>
+            <div className="vercel-menu-grid">
+              {[
+                {
+                  title: "Best Offers",
+                  desc: `This is the offers for ${element}`,
+                },
+                {
+                  title: "Top Rated",
+                  desc: `This is the top rated ${element} cars`,
+                },
+                {
+                  title: "New Arrivals",
+                  desc: `This is the new arrivals ${element} cars`,
+                },
+                {
+                  title: "Trending Models",
+                  desc: `This is the trending ${element} cars`,
+                },
+              ].map((item, i) => (
+                <div key={i} className="vercel-menu-item">
+                  <div className="menu-item-icon">
+                    <Medal />
+                  </div>
+                  <div className="menu-item-description">
+                    <p className="menu-title">{item.title}</p>
+                    <span>{item.desc}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </div>
-  )}
-</nav>
-  
+        )}
+      </nav>
     </>
   );
 }

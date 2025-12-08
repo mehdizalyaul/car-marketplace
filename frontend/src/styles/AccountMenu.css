@@ -1,0 +1,231 @@
+/* ===================== ACCOUNT MENU ===================== */
+.account-menu {
+  position: absolute;
+  top: 50px;
+  right: 20px;
+  width: 280px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  z-index: 1000;
+  animation: slideDown 0.2s ease-out;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Inter",
+    sans-serif;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Arrow pointer */
+.account-menu::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  right: 20px;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-left: 1px solid #e5e7eb;
+  border-top: 1px solid #e5e7eb;
+  transform: rotate(45deg);
+}
+
+/* ===================== MENU HEADER ===================== */
+.account-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.account-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.account-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.account-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.account-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  margin: 0 0 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.account-email {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ===================== DIVIDER ===================== */
+.account-menu-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 8px 0;
+}
+
+/* ===================== MENU LIST ===================== */
+.account-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.account-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #444;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.account-item:hover {
+  background: #f8f9fa;
+  color: #405ff2;
+}
+
+.account-item:active {
+  transform: scale(0.98);
+}
+
+.account-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  color: #405ff2;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.account-item:hover .account-icon {
+  background: #405ff2;
+  color: #fff;
+}
+
+.account-label {
+  flex: 1;
+}
+
+/* ===================== LOGOUT SECTION ===================== */
+.account-logout {
+  padding-top: 4px;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #e53e3e;
+  font-size: 14px;
+  font-weight: 500;
+  text-align: left;
+}
+
+.logout-btn:hover {
+  background: #fee;
+}
+
+.logout-btn:active {
+  transform: scale(0.98);
+}
+
+.logout-btn svg {
+  flex-shrink: 0;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 480px) {
+  .account-menu {
+    width: 260px;
+    right: -10px;
+  }
+
+  .account-menu::before {
+    right: 25px;
+  }
+
+  .account-name {
+    font-size: 14px;
+  }
+
+  .account-email {
+    font-size: 12px;
+  }
+
+  .account-item {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .account-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .account-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+}
