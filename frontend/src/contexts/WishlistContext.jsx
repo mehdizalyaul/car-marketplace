@@ -1,31 +1,20 @@
-import { createContext, useContext, useState, useEffect } from "react";
-
-export const WishlistContext = createContext();
-
-export const useWishlist = () => useContext(WishlistContext);
+import { useState, useEffect } from "react";
+import { WishlistContext } from "../contexts/myContexts";
+import { useAuth } from "../hooks/useAuth";
+import { WishlistApi } from "../services";
 
 export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const token = localStorage.getItem("token");
+  const { token } = useAuth();
 
   // GET wishlist
   const fetchWishlist = async () => {
-    if (!token) return;
-
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:8000/api/wishlist", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const data = await WishlistApi.getMine(token);
 
-      if (!response.ok) throw new Error("Failed to fetch wishlist");
-
-      const data = await response.json();
       setWishlist(data);
     } catch (err) {
       setError(err.message);
@@ -36,45 +25,31 @@ export const WishlistProvider = ({ children }) => {
 
   // ADD to wishlist
   const addToWishlist = async (carId) => {
+    setLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:8000/api/wishlist/${carId}`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to add to wishlist");
-
+      const response = await WishlistApi.add(carId, token);
       // update local state instead of refetching
       setWishlist((prev) => [...prev, { car_id: carId }]);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   // REMOVE from wishlist
   const removeFromWishlist = async (carId) => {
-    try {
-      const response = await fetch(
-        `http://localhost:8000/api/wishlist/${carId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    setLoading(true);
 
-      if (!response.ok) throw new Error("Failed to remove from wishlist");
+    try {
+      await WishlistApi.removeOne(carId, token);
 
       // update local state
       setWishlist((prev) => prev.filter((item) => item.car_id !== carId));
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -84,6 +59,7 @@ export const WishlistProvider = ({ children }) => {
 
   // Fetch wishlist automatically on load
   useEffect(() => {
+    if (!token) return;
     fetchWishlist();
   }, []);
 
