@@ -14,7 +14,6 @@ export const getMine = async (token) => {
 };
 
 export const add = async (carId, token) => {
-  console.log("Adding to wishlist:", carId, token);
   try {
     const response = await fetch(
       `http://localhost:8000/api/wishlist/${carId}`,
@@ -49,6 +48,22 @@ export const removeOne = async (carId, token) => {
     return await response.json();
   } catch (err) {
     console.error("Error removing from wishlist:", err.message);
+    throw err;
+  }
+};
+
+export const clear = async (token) => {
+  try {
+    const response = await fetch(`http://localhost:8000/api/wishlist/clear`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!response.ok) throw new Error("Failed to clear wishlist");
+    return await response.json();
+  } catch (err) {
+    console.error("Error clearing wishlist:", err.message);
     throw err;
   }
 };

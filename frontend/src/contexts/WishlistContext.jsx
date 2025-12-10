@@ -9,13 +9,12 @@ export const WishlistProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const { token } = useAuth();
 
-  // GET wishlist
   const fetchWishlist = async () => {
     setLoading(true);
     try {
-      const data = await WishlistApi.getMine(token);
-
-      setWishlist(data);
+      const response = await WishlistApi.getMine(token);
+      const cars = response.data.map((list) => list.car);
+      setWishlist(cars || []);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -27,7 +26,7 @@ export const WishlistProvider = ({ children }) => {
   const addToWishlist = async (carId) => {
     setLoading(true);
     try {
-      const response = await WishlistApi.add(carId, token);
+      await WishlistApi.add(carId, token);
       // update local state instead of refetching
       setWishlist((prev) => [...prev, { car_id: carId }]);
     } catch (err) {
@@ -45,11 +44,28 @@ export const WishlistProvider = ({ children }) => {
       await WishlistApi.removeOne(carId, token);
 
       // update local state
-      setWishlist((prev) => prev.filter((item) => item.car_id !== carId));
+      setWishlist((prev) => prev.filter((item) => item.id !== carId));
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // CLEAR wishlist
+  const clearWishlist = async () => {
+    if (
+      window.confirm("Are you sure you want to clear your entire wishlist?")
+    ) {
+      setLoading(true);
+      try {
+        await WishlistApi.clear(token);
+        setWishlist([]);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -73,6 +89,7 @@ export const WishlistProvider = ({ children }) => {
         addToWishlist,
         removeFromWishlist,
         isInWishlist,
+        clearWishlist,
       }}
     >
       {children}

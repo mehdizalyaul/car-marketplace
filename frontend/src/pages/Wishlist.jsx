@@ -19,25 +19,15 @@ import useWishlist from "../hooks/useWishlist";
 export default function Wishlist() {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { wishlist, removeFromWishlist } = useWishlist();
+  const { wishlist, removeFromWishlist, clearWishlist } = useWishlist();
 
   useEffect(() => {
-    const cars = wishlist.data?.map((list) => list.car);
     // Simulate loading delay
     setTimeout(() => {
-      setWishlistItems(cars || []);
+      setWishlistItems(wishlist || []);
       setLoading(false);
     }, 800);
   }, [wishlist]);
-
-  const clearWishlist = () => {
-    if (
-      window.confirm("Are you sure you want to clear your entire wishlist?")
-    ) {
-      localStorage.removeItem("wishlist");
-      setWishlistItems([]);
-    }
-  };
 
   if (loading) {
     return (
@@ -89,74 +79,72 @@ export default function Wishlist() {
         <div className="wishlist-grid">
           {wishlistItems &&
             wishlistItems.map((car) => (
-              <div key={car.id} className="wishlist-card">
+              <div key={car?.id} className="wishlist-card">
                 <div className="wishlist-card-image-wrapper">
                   <img
-                    src={`http://localhost:8000/${
-                      car.images?.[0] || car.image
-                    }`}
-                    alt={car.title}
+                    src={`http://localhost:8000/${car?.image}`}
+                    alt={car?.title}
                     className="wishlist-card-image"
                   />
                   <button
                     className="remove-wishlist-btn"
-                    onClick={() => removeFromWishlist(car.id)}
+                    onClick={() => removeFromWishlist(car?.id)}
                     title="Remove from wishlist"
                   >
                     <X size={18} />
                   </button>
-                  <span className={`wishlist-status-badge ${car.status}`}>
-                    {car.status === "available" ? "Available" : "Sold"}
+                  <span className={`wishlist-status-badge ${car?.status}`}>
+                    {car?.status === "available" ? "Available" : "Sold"}
                   </span>
                 </div>
 
                 <div className="wishlist-card-content">
-                  <h3 className="wishlist-card-title">{car.title}</h3>
+                  <h3 className="wishlist-card-title">{car?.title}</h3>
 
                   <div className="wishlist-card-stats">
                     <span className="wishlist-stat">
-                      <Calendar size={14} /> {car.year}
+                      <Calendar size={14} /> {car?.year}
                     </span>
                     <span className="wishlist-stat">
-                      <Clock size={14} /> {car.miles?.toLocaleString()} mi
+                      <Clock size={14} /> {car?.miles?.toLocaleString()} mi
                     </span>
                     <span className="wishlist-stat">
-                      <Fuel size={14} /> {car.fuel || "Gasoline"}
+                      <Fuel size={14} /> {car?.fuel || "Gasoline"}
                     </span>
                   </div>
 
                   <div className="wishlist-card-details">
                     <div className="wishlist-detail-item">
                       <Settings size={16} />
-                      <span>{car.transmission}</span>
+                      <span>{car?.transmission}</span>
                     </div>
                     <div className="wishlist-detail-item">
                       <MapPin size={16} />
-                      <span>{car.location}</span>
+                      <span>{car?.location}</span>
                     </div>
                   </div>
 
-                  {car.description && (
+                  {car?.description && (
                     <p className="wishlist-card-description">
-                      {car.description.length > 80
-                        ? `${car.description.substring(0, 80)}...`
-                        : car.description}
+                      {car?.description.length > 80
+                        ? `${car?.description.substring(0, 80)}...`
+                        : car?.description}
                     </p>
                   )}
 
                   <div className="wishlist-card-footer">
                     <div className="wishlist-price-section">
                       <span className="wishlist-price">
-                        ${car.price?.toLocaleString()}
+                        ${car?.price?.toLocaleString()}
                       </span>
                       <span className="wishlist-condition-badge">
-                        {car.condition}
+                        {car?.condition}
                       </span>
                     </div>
 
                     <div className="wishlist-card-actions">
                       <Link
-                        to={`/cars/${car.id}`}
+                        to={`/cars/${car?.id}`}
                         className="wishlist-view-btn"
                         title="View details"
                       >
