@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Auth\AuthenticationException;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,17 +16,23 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Sanctum Statefulness
         $middleware->api(prepend: [
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         ]);
 
+        // Alias Middleware
         $middleware->alias([
             'admin' => AdminMiddleware::class,
         ]);
 
+        // CSRF Exceptions
         $middleware->validateCsrfTokens(except: [
             'api/*',
         ]);
+
+        // ✅ Add built-in CORS middleware to API group
+        $middleware->appendToGroup('api', HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->render(function (AuthenticationException $e, Request $request) {
