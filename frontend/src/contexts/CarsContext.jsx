@@ -1,10 +1,19 @@
 import { useReducer } from "react";
 import { CarsApi } from "../services";
 import { CarsContext } from "./myContexts";
+import { useAuth } from "../hooks/useAuth";
+
+const savedFilters = (() => {
+  try {
+    return JSON.parse(localStorage.getItem("filters")) || {};
+  } catch {
+    return {};
+  }
+})();
 
 const initialState = {
   cars: [],
-  filters: {},
+  filters: savedFilters,
   filterOptions: {
     brands: [],
     fuels: [],
@@ -29,7 +38,6 @@ function carsReducer(state, action) {
       return { ...state, loading: true };
 
     case "SET_DATA":
-      // For first page or filter change - replace all cars
       return {
         ...state,
         cars: action.payload.cars,
@@ -42,7 +50,6 @@ function carsReducer(state, action) {
       };
 
     case "APPEND_CARS":
-      // For subsequent pages - append cars
       return {
         ...state,
         cars: [
@@ -64,6 +71,17 @@ function carsReducer(state, action) {
     case "SET_FILTERS":
       return { ...state, filters: action.payload, currentPage: 1, cars: [] };
 
+    case "CLEAR_A_FILTER_GROUP":
+      return {
+        ...state,
+        filters: {
+          ...state.filters,
+          [action.payload.type]: [],
+        },
+        currentPage: 1,
+        cars: [],
+      };
+
     default:
       return state;
   }
@@ -71,24 +89,28 @@ function carsReducer(state, action) {
 
 export function CarsProvider({ children }) {
   const [state, dispatch] = useReducer(carsReducer, initialState);
-
-  // Load cars for specific page
+  const { token, authReady } = useAuth();
   const loadCars = async (filters = state.filters, page = 1) => {
     dispatch({ type: "SET_LOADING" });
     try {
-      const res = await CarsApi.getFiltered(filters, page, state.pageSize);
-      console.log("API Response:", res);
-
+      if (!authReady) {
+        return;
+      }
+      const res = await CarsApi.getFiltered(
+        filters,
+        page,
+        state.pageSize,
+        token
+      );
       if (!res) {
         dispatch({ type: "SET_ERROR", payload: "No data received" });
         return;
       }
 
-      // Extract data from API response
       const cars = res.cars || [];
       const pagination = res.pagination || {};
       const filterOptions = res.filters || null;
-      console.log(filterOptions);
+
       const total = pagination.total || 0;
       const currentPage = pagination.current_page || page;
       const lastPage = pagination.last_page || 1;
@@ -123,20 +145,24 @@ export function CarsProvider({ children }) {
     }
   };
 
-  // Set filters and reload from page 1
   const setFilters = (newFilters) => {
     dispatch({ type: "SET_FILTERS", payload: newFilters });
+    localStorage.setItem("filters", JSON.stringify(newFilters));
     loadCars(newFilters, 1);
   };
 
-  // Load next page for infinite scroll
-  const loadNextPage = () => {
-    if (state.currentPage >= state.lastPage || state.loading) return;
-    const nextPage = state.currentPage + 1;
-    loadCars(state.filters, nextPage);
+  const clearFilterGroup = (type) => {
+    const updated = { ...state.filters, [type]: [] };
+    localStorage.setItem("filters", JSON.stringify(updated));
+    dispatch({ type: "CLEAR_A_FILTER_GROUP", payload: { type } });
+    loadCars(updated, 1);
   };
 
-  // Load specific page (for pagination buttons)
+  const loadNextPage = () => {
+    if (state.currentPage >= state.lastPage || state.loading) return;
+    loadCars(state.filters, state.currentPage + 1);
+  };
+
   const loadPage = (page) => {
     if (page < 1 || page > state.lastPage || state.loading) return;
     loadCars(state.filters, page);
@@ -148,6 +174,7 @@ export function CarsProvider({ children }) {
         ...state,
         dispatch,
         setFilters,
+        clearFilterGroup,
         loadCars,
         loadNextPage,
         loadPage,

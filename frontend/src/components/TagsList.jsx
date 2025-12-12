@@ -3,7 +3,7 @@ import useCars from "../hooks/useCars";
 import "../styles/TagsList.css";
 
 export default function TagsList() {
-  const { filters, dispatch } = useCars();
+  const { filters, clearFilterGroup } = useCars();
   return (
     <div className="active-filters">
       {Object.keys(filters).map((key) => {
@@ -22,15 +22,7 @@ export default function TagsList() {
               {values.length > 1 ? `${values.length} selected` : values[0]}
             </span>
 
-            <X
-              size={14}
-              onClick={() =>
-                dispatch({
-                  type: "CLEAR_A_FILTER_GROUP",
-                  payload: { type: key },
-                })
-              }
-            />
+            <X size={14} onClick={() => clearFilterGroup(key)} />
           </span>
         );
       })}
