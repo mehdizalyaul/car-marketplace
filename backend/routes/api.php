@@ -20,17 +20,23 @@ Route::prefix('auth')->group(function () {
 });
 
 Route::prefix('cars')->group(function () {
-    // Public routes
-    Route::get('/', [CarController::class, 'index']);
-    Route::get('/{car}', [CarController::class, 'show']);
 
-    // Protected routes (requires auth + admin)
-    Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    //  Public routes
+    Route::get('/', [CarController::class, 'indexPublic']);
+
+    //  Authenticated routes
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/auth', [CarController::class, 'index']); // includes is_wishlisted
         Route::post('/', [CarController::class, 'store']);
         Route::put('/{car}', [CarController::class, 'update']);
         Route::delete('/{car}', [CarController::class, 'destroy']);
     });
+
+  
+    Route::get('/{car}', [CarController::class, 'show']);
 });
+
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/wishlist', [WishlistController::class, 'index']);

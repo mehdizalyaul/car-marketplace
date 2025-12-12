@@ -39,7 +39,7 @@ public function index(Request $request)
 
     return response()->json([
         'message' => $message,
-        'data' => $wishlist
+       'data' => new WishlistResource($wishlist)
     ], 201);
 }
 
