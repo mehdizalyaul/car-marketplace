@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     JSON.parse(localStorage.getItem("user")) || null
   );
   const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [authReady, setAuthReady] = useState(token !== null);
 
   // ------------- Register ----------------
   const register = async (data) => {
@@ -20,11 +21,11 @@ export const AuthProvider = ({ children }) => {
 
       setToken(result.token);
       setUser(result.user);
-
-      return result; // return for navigation/error handling
     } catch (error) {
       console.log("Registration error:", error);
       throw error; // re-throw for caller
+    } finally {
+      setAuthReady(true);
     }
   };
 
@@ -44,6 +45,8 @@ export const AuthProvider = ({ children }) => {
       setUser(result.user);
     } catch (error) {
       console.log("Login error:", error);
+    } finally {
+      setAuthReady(true);
     }
   };
 
@@ -71,6 +74,7 @@ export const AuthProvider = ({ children }) => {
         register,
         logout,
         isAuthenticated: !!user,
+        authReady,
       }}
     >
       {children}

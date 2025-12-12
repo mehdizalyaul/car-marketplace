@@ -1,7 +1,6 @@
 import { BASE_URL } from "../db";
 
-// FILTER CARS
-export async function getFiltered(filters = {}, page, pageSize) {
+export async function getFiltered(filters = {}, page, pageSize, token) {
   try {
     const params = new URLSearchParams();
 
@@ -9,10 +8,9 @@ export async function getFiltered(filters = {}, page, pageSize) {
     params.append("page", page);
     params.append("pageSize", pageSize);
 
-    // Filters (supports multiple values)
+    // Filters
     Object.keys(filters).forEach((key) => {
       const value = filters[key];
-
       if (Array.isArray(value)) {
         value.forEach((v) => params.append(key, v));
       } else {
@@ -20,8 +18,19 @@ export async function getFiltered(filters = {}, page, pageSize) {
       }
     });
 
-    const url = `${BASE_URL}?${params.toString()}`;
-    const res = await fetch(url);
+    // Choose endpoint
+    const url = `${BASE_URL}${token ? "/auth" : ""}?${params.toString()}`;
+
+    // Build fetch options safely
+    const options = {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    };
+
+    const res = await fetch(url, options);
 
     if (!res.ok) {
       throw new Error(`HTTP Error: ${res.status}`);
