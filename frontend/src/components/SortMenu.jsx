@@ -15,31 +15,38 @@ export default function SortMenu({ value, onChange }) {
     { id: "year_old", label: "Oldest Year" },
   ];
 
-  const activeLabel = options.find(o => o.id === value)?.label;
+  const activeLabel = options.find((o) => o.id === value)?.label;
 
   return (
     <div className="sort-wrapper">
       <button className="sort-btn" onClick={() => setOpen(!open)}>
-        Sort by: <span className="sort-label">{activeLabel}</span>
-        <ChevronDown size={16} className={open ? "rotate" : ""} />
+        <span className="sort-text">Sort by:</span>
+        <span className="sort-label">{activeLabel}</span>
+        <ChevronDown
+          size={16}
+          className={`sort-chevron ${open ? "rotate" : ""}`}
+        />
       </button>
 
       {open && (
-        <div className="sort-menu">
-          {options.map(opt => (
-            <div
-              key={opt.id}
-              className="sort-item"
-              onClick={() => {
-                onChange(opt.id);
-                setOpen(false);
-              }}
-            >
-              <span>{opt.label}</span>
-              {value === opt.id && <Check size={16} className="checked" />}
-            </div>
-          ))}
-        </div>
+        <>
+          <div className="sort-overlay" onClick={() => setOpen(false)} />
+          <div className="sort-menu">
+            {options.map((opt) => (
+              <div
+                key={opt.id}
+                className={`sort-item ${value === opt.id ? "active" : ""}`}
+                onClick={() => {
+                  onChange(opt.id);
+                  setOpen(false);
+                }}
+              >
+                <span>{opt.label}</span>
+                {value === opt.id && <Check size={16} className="checked" />}
+              </div>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

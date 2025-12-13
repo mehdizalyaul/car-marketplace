@@ -1,30 +1,52 @@
+/* ===================== LAYOUT SWITCHER ===================== */
 .layout-switcher {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-}
-
-.layout-switcher button {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 8px 8px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  gap: 6px;
+  padding: 4px;
   background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+/* ===================== LAYOUT BUTTON ===================== */
+.layout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  color: #666;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
-.layout-switcher button:hover {
-  background: #e5e7eb;
+.layout-btn:hover {
+  background: #e6e7e9;
+  color: #405ff2;
 }
 
-.layout-switcher .active {
+.layout-btn.active {
   background: #405ff2;
-  color: white;
-  border-color: #405ff2;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(64, 95, 242, 0.3);
+}
+
+.layout-btn svg {
+  flex-shrink: 0;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 480px) {
+  .layout-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .layout-btn svg {
+    width: 16px;
+    height: 16px;
+  }
 }
