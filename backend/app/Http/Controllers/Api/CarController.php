@@ -20,6 +20,8 @@ class CarController extends Controller
     {
         return is_array($value) ? $value : explode(',', $value);
     }
+
+
     // GET /cars/auth (authenticated)
     public function index(Request $request)
     {
@@ -84,7 +86,12 @@ class CarController extends Controller
         }
         if ($request->filled('status')) {
             $query->whereIn('status', $toArr($request->status));
+            
         }
+
+        $query->when($request->filled('search'), function ($q) use ($request) {
+          $q->search($request->search);
+            });
 
         // SORTING
         switch ($request->input('sort')) {
@@ -233,7 +240,15 @@ class CarController extends Controller
         ]);
     }
 
+    public function searchAuth(Request $request){
+        $user = $request->user();
+        $search = $request->query('search');
+        $pageSize = $request->query('pageSize');
 
+
+
+
+    }
 // GET /cars/{id}
  public function show($id)
     {
