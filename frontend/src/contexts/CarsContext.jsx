@@ -3,6 +3,7 @@ import { CarsApi } from "../services";
 import { CarsContext } from "./myContexts";
 import { useAuth } from "../hooks/useAuth";
 
+/* ===================== LOCAL STORAGE ===================== */
 const savedFilters = (() => {
   try {
     return JSON.parse(localStorage.getItem("filters")) || {};
@@ -11,9 +12,11 @@ const savedFilters = (() => {
   }
 })();
 
+/* ===================== INITIAL STATE ===================== */
 const initialState = {
   cars: [],
   filters: savedFilters,
+  search: "",
   filterOptions: {
     brands: [],
     fuels: [],
@@ -29,9 +32,10 @@ const initialState = {
   currentPage: 1,
   lastPage: 1,
   total: 0,
-  pageSize: 5,
+  pageSize: 8,
 };
 
+/* ===================== REDUCER ===================== */
 function carsReducer(state, action) {
   switch (action.type) {
     case "SET_LOADING":
@@ -65,43 +69,65 @@ function carsReducer(state, action) {
         error: null,
       };
 
-    case "SET_ERROR":
-      return { ...state, error: action.payload, loading: false };
-
     case "SET_FILTERS":
-      return { ...state, filters: action.payload, currentPage: 1, cars: [] };
+      return {
+        ...state,
+        filters: action.payload,
+        currentPage: 1,
+        cars: [],
+      };
+
+    case "SET_SEARCH":
+      return {
+        ...state,
+        search: action.payload,
+        currentPage: 1,
+        cars: [],
+      };
 
     case "CLEAR_A_FILTER_GROUP":
       return {
         ...state,
         filters: {
           ...state.filters,
-          [action.payload.type]: [],
+          [action.payload]: [],
         },
         currentPage: 1,
         cars: [],
       };
+
+    case "SET_ERROR":
+      return { ...state, error: action.payload, loading: false };
 
     default:
       return state;
   }
 }
 
+/* ===================== PROVIDER ===================== */
 export function CarsProvider({ children }) {
   const [state, dispatch] = useReducer(carsReducer, initialState);
   const { token, authReady } = useAuth();
-  const loadCars = async (filters = state.filters, page = 1) => {
+
+  /* ===================== LOAD CARS ===================== */
+  const loadCars = async (
+    filters = state.filters,
+    search = state.search,
+    page = 1
+  ) => {
+    if (!authReady) return;
+
     dispatch({ type: "SET_LOADING" });
+
     try {
-      if (!authReady) {
-        return;
-      }
-      const res = await CarsApi.getFiltered(
+      const res = await CarsApi.getCars({
         filters,
+        search,
         page,
-        state.pageSize,
-        token
-      );
+        pageSize: state.pageSize,
+        token,
+      });
+
       if (!res) {
         dispatch({ type: "SET_ERROR", payload: "No data received" });
         return;
@@ -111,15 +137,11 @@ export function CarsProvider({ children }) {
       const pagination = res.pagination || {};
       const filterOptions = res.filters || null;
 
-      const total = pagination.total || 0;
-      const currentPage = pagination.current_page || page;
-      const lastPage = pagination.last_page || 1;
-
       const payload = {
         cars,
-        total,
-        currentPage,
-        lastPage,
+        total: pagination.total || 0,
+        currentPage: pagination.current_page || page,
+        lastPage: pagination.last_page || 1,
         filterOptions: filterOptions
           ? {
               brands: filterOptions.brands || [],
@@ -134,47 +156,54 @@ export function CarsProvider({ children }) {
           : null,
       };
 
-      if (page === 1) {
-        dispatch({ type: "SET_DATA", payload });
-      } else {
-        dispatch({ type: "APPEND_CARS", payload });
-      }
+      dispatch({
+        type: page === 1 ? "SET_DATA" : "APPEND_CARS",
+        payload,
+      });
     } catch (err) {
-      console.error("Load cars error:", err);
       dispatch({ type: "SET_ERROR", payload: err.message });
     }
   };
 
+  /* ===================== FILTERS ===================== */
   const setFilters = (newFilters) => {
-    dispatch({ type: "SET_FILTERS", payload: newFilters });
     localStorage.setItem("filters", JSON.stringify(newFilters));
-    loadCars(newFilters, 1);
+    dispatch({ type: "SET_FILTERS", payload: newFilters });
+    loadCars(newFilters, state.search, 1);
   };
 
   const clearFilterGroup = (type) => {
     const updated = { ...state.filters, [type]: [] };
     localStorage.setItem("filters", JSON.stringify(updated));
-    dispatch({ type: "CLEAR_A_FILTER_GROUP", payload: { type } });
-    loadCars(updated, 1);
+    dispatch({ type: "CLEAR_A_FILTER_GROUP", payload: type });
+    loadCars(updated, state.search, 1);
   };
 
+  /* ===================== SEARCH ===================== */
+  const setSearch = (value) => {
+    dispatch({ type: "SET_SEARCH", payload: value });
+    loadCars(state.filters, value, 1);
+  };
+
+  /* ===================== PAGINATION ===================== */
   const loadNextPage = () => {
-    if (state.currentPage >= state.lastPage || state.loading) return;
-    loadCars(state.filters, state.currentPage + 1);
+    if (state.loading || state.currentPage >= state.lastPage) return;
+    loadCars(state.filters, state.search, state.currentPage + 1);
   };
 
   const loadPage = (page) => {
     if (page < 1 || page > state.lastPage || state.loading) return;
-    loadCars(state.filters, page);
+    loadCars(state.filters, state.search, page);
   };
 
+  /* ===================== CONTEXT ===================== */
   return (
     <CarsContext.Provider
       value={{
         ...state,
-        dispatch,
         setFilters,
         clearFilterGroup,
+        setSearch,
         loadCars,
         loadNextPage,
         loadPage,
