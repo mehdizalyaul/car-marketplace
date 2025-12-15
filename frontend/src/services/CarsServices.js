@@ -1,6 +1,12 @@
 import { BASE_URL } from "../db";
 
-export async function getFiltered(filters = {}, page, pageSize, token) {
+export async function getCars({
+  filters = {},
+  search = "",
+  page = 1,
+  pageSize = 12,
+  token,
+}) {
   try {
     const params = new URLSearchParams();
 
@@ -8,9 +14,15 @@ export async function getFiltered(filters = {}, page, pageSize, token) {
     params.append("page", page);
     params.append("pageSize", pageSize);
 
+    // Search
+    if (search.trim()) {
+      params.append("search", search);
+    }
+
     // Filters
-    Object.keys(filters).forEach((key) => {
-      const value = filters[key];
+    Object.entries(filters).forEach(([key, value]) => {
+      if (!value || value.length === 0) return;
+
       if (Array.isArray(value)) {
         value.forEach((v) => params.append(key, v));
       } else {
@@ -18,27 +30,23 @@ export async function getFiltered(filters = {}, page, pageSize, token) {
       }
     });
 
-    // Choose endpoint
     const url = `${BASE_URL}${token ? "/auth" : ""}?${params.toString()}`;
 
-    // Build fetch options safely
-    const options = {
+    const res = await fetch(url, {
       method: "GET",
       headers: {
         Accept: "application/json",
         ...(token && { Authorization: `Bearer ${token}` }),
       },
-    };
-
-    const res = await fetch(url, options);
+    });
 
     if (!res.ok) {
-      throw new Error(`HTTP Error: ${res.status}`);
+      throw new Error(`HTTP ${res.status}`);
     }
 
     return await res.json();
   } catch (err) {
-    console.error("Error in getFiltered:", err.message);
+    console.error("getCars error:", err.message);
     return { error: true, message: err.message };
   }
 }
