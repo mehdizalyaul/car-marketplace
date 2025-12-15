@@ -181,3 +181,75 @@
     gap: 12px;
   }
 }
+
+/* ===================== Skeleton Loading - Grid Card ===================== */
+.car-card-load {
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+
+  animation: pulse 1.5s ease-in-out infinite;
+  transform: none !important;
+}
+
+.card-image-load {
+  width: 100%;
+  padding-bottom: 56.25%;
+  background: #e0e0e0;
+  border-radius: 8px;
+}
+
+.card-content-load {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.line-load {
+  height: 14px;
+  background: #e0e0e0;
+  border-radius: 6px;
+}
+
+.line-load.short {
+  width: 50%;
+}
+
+/* ===================== Skeleton Loading - List Card ===================== */
+.car-card-list-load {
+  display: flex;
+  gap: 16px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  animation: pulse 1.5s ease-in-out infinite;
+  transform: none !important;
+}
+
+.card-list-image-load {
+  width: 100px;
+  flex-shrink: 0;
+  background: #e0e0e0;
+  aspect-ratio: 4/3;
+  border-radius: 8px;
+}
+
+.card-list-content-load {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ===================== Pulse Animation ===================== */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}

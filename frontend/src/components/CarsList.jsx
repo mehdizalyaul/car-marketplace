@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import useCars from "../hooks/useCars";
 import Card from "./Card";
-import LayoutSwitcher from "./switchLayout";
+import LayoutSwitcher from "./LayoutSwitcher";
 import SortMenu from "./SortMenu";
 import TagsList from "./TagsList";
 import { fallbackCars } from "../db";
@@ -10,26 +10,26 @@ import "../styles/CarsList.css";
 import { useAuth } from "../hooks/useAuth";
 
 export default function CarsList() {
-  const [layoutMode, setLayoutMode] = useState("grid"); // 'grid' or 'list'
+  const [layoutMode, setLayoutMode] = useState("grid"); // 'grid' | 'list'
   const [sortBy, setSortBy] = useState("recommended");
-  const { cars, loading, error, filters, loadCars, loadNextPage } = useCars();
-  const { authReady, token } = useAuth();
 
-  // Reload cars when filters change
+  const { cars, loading, error, loadCars, loadNextPage } = useCars();
+  const { authReady } = useAuth();
+
+  /* ---------------- Initial Load ---------------- */
   useEffect(() => {
     if (authReady) {
-      loadCars(filters, 1);
+      loadCars();
     }
-  }, [filters, authReady, token]);
+  }, [authReady]);
 
-  // Infinite scroll
+  /* ---------------- Infinite Scroll ---------------- */
   useEffect(() => {
     function handleScroll() {
-      const bottom =
+      const reachedBottom =
         window.innerHeight + window.scrollY >= document.body.offsetHeight - 700;
 
-      if (bottom && !loading) {
-        console.log("Loading next page...");
+      if (reachedBottom && !loading) {
         loadNextPage();
       }
     }
@@ -38,19 +38,26 @@ export default function CarsList() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [loading]);
 
-  // Fallback if no cars
+  /* ---------------- Derived States ---------------- */
   const carsList = cars?.length > 0 ? cars : fallbackCars;
 
+  const isInitialLoading = loading && cars.length === 0;
+  const isLoadingMore = loading && cars.length > 0;
+
+  const skeletonCount = layoutMode === "grid" ? 10 : 4;
+
+  /* ---------------- Render ---------------- */
   return (
     <div className="cars-list-wrapper">
       {/* Toolbar */}
       <div className="cars-toolbar">
         <div className="toolbar-left">
           <h2 className="results-count">
-            {carsList?.length || 0}{" "}
-            {carsList?.length === 1 ? "Vehicle" : "Vehicles"} Found
+            {carsList.length} {carsList.length === 1 ? "Vehicle" : "Vehicles"}{" "}
+            Found
           </h2>
         </div>
+
         <div className="toolbar-right">
           <SortMenu value={sortBy} onChange={setSortBy} />
           <LayoutSwitcher current={layoutMode} onChange={setLayoutMode} />
@@ -60,7 +67,7 @@ export default function CarsList() {
       {/* Tags */}
       <TagsList />
 
-      {/* Error State */}
+      {/* Error */}
       {error && (
         <div className="cars-error">
           <AlertCircle size={48} />
@@ -69,30 +76,60 @@ export default function CarsList() {
         </div>
       )}
 
-      {/* Cars Grid/List */}
+      {/* Cars */}
       <div className={`cars-container ${layoutMode}`}>
-        {carsList &&
+        {/* Initial Skeletons */}
+        {isInitialLoading &&
+          Array.from({ length: skeletonCount }).map((_, i) => (
+            <SkeletonCard key={i} layoutMode={layoutMode} />
+          ))}
+
+        {/* Real Cards */}
+        {!isInitialLoading &&
           carsList.map((car) => (
             <Card key={car.id} car={car} layoutMode={layoutMode} />
           ))}
+
+        {/* Infinite Scroll Skeletons */}
+        {isLoadingMore &&
+          Array.from({ length: skeletonCount }).map((_, i) => (
+            <SkeletonCard key={`load-${i}`} layoutMode={layoutMode} />
+          ))}
       </div>
 
-      {/* Loading State */}
-      {loading && (
-        <div className="cars-loading">
-          <Loader2 size={32} className="spinner" />
-          <p>Loading more vehicles...</p>
-        </div>
-      )}
-
-      {/* Empty State */}
-      {!loading && carsList?.length === 0 && (
+      {/* Empty */}
+      {!loading && carsList.length === 0 && (
         <div className="cars-empty">
           <AlertCircle size={48} />
           <h3>No vehicles found</h3>
-          <p>Try adjusting your filters to see more results</p>
+          <p>Try adjusting your filters</p>
         </div>
       )}
+    </div>
+  );
+}
+
+/* ---------------- Skeleton Card ---------------- */
+
+function SkeletonCard({ layoutMode }) {
+  return (
+    <div
+      className={layoutMode === "grid" ? "car-card-load" : "car-card-list-load"}
+    >
+      <div
+        className={
+          layoutMode === "grid" ? "card-image-load" : "card-list-image-load"
+        }
+      />
+      <div
+        className={
+          layoutMode === "grid" ? "card-content-load" : "card-list-content-load"
+        }
+      >
+        <div className="line-load short" />
+        <div className="line-load" />
+        <div className="line-load" />
+      </div>
     </div>
   );
 }
