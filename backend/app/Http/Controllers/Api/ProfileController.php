@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -25,29 +26,35 @@ class ProfileController extends Controller
     
      // Update profile + optional user password
      
-    public function update(UpdateProfileRequest $request): JsonResponse
+   public function update(UpdateProfileRequest $request)
     {
-        $user = $request->user();
-        $data = $request->validated();
+    $request->user()->profile->update($request->validated());
 
-        //Update USER (auth data)
-        if (isset($data['password'])) {
-            $user->update([
-                'password' => Hash::make($data['password']),
-            ]);
-        }
-
-        // Update PROFILE (profile data)
-        $user->profile->update(
-            collect($data)->except(['password'])->toArray()
-        );
-
-        return response()->json([
-            'message' => 'Profile updated successfully',
-            'user' => new UserResource($user->load('profile')),
-        ]);
+    return response()->json([
+        'message' => 'Profile updated successfully',
+    ]);
     }
 
+    // Change password
+
+    public function changePassword(ChangePasswordRequest $request)
+    {
+    $user = $request->user();
+
+    if (!Hash::check($request->current_password, $user->password)) {
+        return response()->json([
+            'message' => 'Current password is incorrect',
+        ], 422);
+    }
+
+    $user->update([
+        'password' => Hash::make($request->password),
+    ]);
+
+    return response()->json([
+        'message' => 'Password updated successfully',
+    ]);
+    }
     
     //  Upload profile avatar
      

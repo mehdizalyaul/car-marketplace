@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CarController;
 use App\Http\Controllers\Api\WishlistController;
+use App\Http\Controllers\Api\ProfileController;
 
 Route::get('/ping', function () {
     return response()->json(['message' => 'API is working!']);
@@ -49,11 +50,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/upload', [UploadController::class, 'upload'])->middleware('admin');
-
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'show']);
         Route::put('/', [ProfileController::class, 'update']);
+        Route::put('/change-password', [ProfileController::class, 'changePassword']);
+        Route::post('/avatar', [ProfileController::class, 'uploadAvatar']);
+
     });
 });
 
