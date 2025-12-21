@@ -23,8 +23,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
-        'phone',
-        'address',
+
     ];
 
     /**
@@ -50,15 +49,11 @@ class User extends Authenticatable
         ];
     }
 
-    public function cart()
+    public function profile()
     {
-        return $this->hasOne(Cart::class);
+    return $this->hasOne(Profile::class);
     }
 
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
 
     public function isAdmin(): bool
     {

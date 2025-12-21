@@ -36,7 +36,6 @@ class Profile extends Model
      */
     protected $casts = [
         'is_verified' => 'boolean',
-        'last_active_at' => 'datetime',
         'rating' => 'integer',
     ];
 

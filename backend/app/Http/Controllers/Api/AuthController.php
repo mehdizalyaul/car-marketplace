@@ -17,25 +17,35 @@ class AuthController extends Controller
     /**
      * Register a new customer
      */
-    public function register(RegisterRequest $request): JsonResponse
-    {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role ?? 'customer',
-            'phone' => $request->phone,
-            'address' => $request->address,
-        ]);
+public function register(RegisterRequest $request): JsonResponse
+{
+    // Create user
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+        'role' => $request->role ?? 'customer',
+    ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+    //  Create profile for the user
+    $user->profile()->create([
+        'full_name' => $request->name,
+        'type' => 'buyer',
+        'phone' => $request->phone,
+        'city' => $request->location,
+    ]);
 
-        return response()->json([
-            'message' => 'User registered successfully',
-            'user' => new UserResource($user),
-            'token' => $token,
-        ], 201);
-    }
+    //  Generate auth token
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    
+    return response()->json([
+        'message' => 'User registered successfully',
+        'user' => new UserResource($user->load('profile')),
+        'token' => $token,
+    ], 201);
+}
+
 
     /**
      * Login and get token
