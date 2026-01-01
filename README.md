@@ -22,7 +22,7 @@ Built with **React.js** on the frontend and **Laravel** on the backend, using **
 
 ##  Technologies Used
 
-### Frontend: React.js, JavaScript (ES6+),Context API, Reacte routes, CSS  
+### Frontend: React.js, JavaScript (ES6+), Context API, React Router, CSS
 
 ### Backend: Laravel, Laravel Sanctum, RESTful API, MVC architecture  
 
